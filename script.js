@@ -21,10 +21,7 @@ function getCookie(name) {
 }
 
 document.getElementById("BoutonPereNoel").addEventListener("click", function() {
-    NbCadeaux++;
-    if (NbCadeaux == 10) {
-        window.alert("Bravo, continu comme ça!");
-    }
+    NbCadeaux += 1 * bonnus;
     document.getElementById("NbCadeaux").textContent = NbCadeaux;
 });
 
@@ -38,9 +35,37 @@ document.getElementById("MachineMagique").addEventListener("click", function() {
     }
 });
 
+let bonnusDuration = 60000;
+let bonnus = 1;
+
+document.getElementById("dntwo").addEventListener("click", function() {
+    if (NbCadeaux < 1000 || bonnus == 2) {
+        return;
+    }
+    NbCadeaux -= 1000;
+    bonnusDuration = 60000;
+    bonnus = 2;
+    setTimeout(function() {
+        bonnus = 1;
+        bonnusDuration = 0;
+    }, bonnusDuration);
+});
+
+document.getElementById("convertAll").addEventListener("click", function() {
+    if (NbCadeaux < CoutMachineMagique) {
+        return;
+    }
+    for (let i = 0; i < NbCadeaux / CoutMachineMagique; i++) {
+        NbCadeaux -= CoutMachineMagique;
+        NbMachineMagique++;
+        CoutMachineMagique = Math.floor(50 * Math.pow(1.5, NbMachineMagique));
+    }
+});
+
 function updateGifts() {
     // Production par machine magique
-    NbCadeaux += NbMachineMagique;
+    NbCadeaux += NbMachineMagique * bonnus;
+    CoutMachineMagique = Math.floor(50 * Math.pow(1.5, NbMachineMagique));
     // Sauvegarder le nombre de cadeaux dans un cookie
     setCookie("NbCadeaux", NbCadeaux.toString(), 7); // Durée : 7 jours
     setCookie("NbMachineMagique", NbMachineMagique.toString(), 7); // Durée : 7 jours
@@ -51,6 +76,7 @@ function updateGifts() {
 function updateDisplay() {
     document.getElementById("NbCadeaux").textContent = NbCadeaux;
     document.getElementById("NbMachineMagique").textContent = NbMachineMagique;
+    document.getElementById("costMag").textContent = CoutMachineMagique;
 }
 
 function updateNoel() {
